@@ -110,7 +110,7 @@ class Tablero:
             return True
         
         valor_actual = self.obtener_posicion(fila, col)
-        if valor_actual == "🟨":
+        if valor_actual == "🌲":
             paso_por_valor = True
 
         self.cambiar_casilla(fila, col, "0")
