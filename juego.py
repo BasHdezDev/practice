@@ -14,11 +14,6 @@ class Juego:
     def iniciar_y(self):
         self.pos_y = self.tablero.posicion_inicial_y()
 
-    def casilla_pasar_ganar(self):
-        fila = 1
-        col = 0
-        self.tablero.cambiar_casilla(fila, col, "🌲")
-
     def movimiento_x(self):
             direccion = input("Movimiento:\n1: arriba\n2: abajo\n3: izquierda\n4: derecha\n->  ")
 
@@ -50,13 +45,7 @@ class Juego:
                     self.pos_x = (fila_salto, col_salto)
                     self.tablero.cambiar_casilla(fila_salto, col_salto, '❌')
                     return
-                
-                if node_value == '🌲':
-                    fila_salto, col_salto = self.saltar_dos_veces(nueva_fila, nueva_col, direccion, self.pos_x)
-                    self.tablero.cambiar_casilla(self.pos_x[0], self.pos_x[1], '🔳')
-                    self.pos_x = (fila_salto, col_salto)
-                    self.tablero.cambiar_casilla(fila_salto, col_salto, '❌')
-                    return
+
 
                 else:
                     self.tablero.cambiar_casilla(self.pos_x[0], self.pos_x[1], '🔳')
@@ -98,13 +87,6 @@ class Juego:
                     self.pos_y = (fila_salto, col_salto)
                     self.tablero.cambiar_casilla(fila_salto, col_salto, '🤖')
                     return
-                
-                if valor_nodo == '🌲':
-                    fila_salto, col_salto = self.saltar_dos_veces(nueva_fila, nueva_col, direccion, self.pos_y)
-                    self.tablero.cambiar_casilla(self.pos_y[0], self.pos_y[1], '🔳')
-                    self.pos_y = (fila_salto, col_salto)
-                    self.tablero.cambiar_casilla(fila_salto, col_salto, '🤖')
-                    return
 
                 else:
                     self.tablero.cambiar_casilla(self.pos_y[0], self.pos_y[1], '🔳')
@@ -132,11 +114,6 @@ class Juego:
                 print()
                 print("\nLa celda ya está bloqueada\n")
                 return
-            
-            if self.tablero.obtener_posicion(fila, col) == '🌲':
-                print()
-                print("\nAquí está el punto por done tiene que pasar\n")
-                return
 
             if self.tablero.obtener_posicion(fila, col) == '🤖' or self.tablero.obtener_posicion(fila, col) == '❌':
                 print("\nHay un jugador en la celda\n")
@@ -157,11 +134,6 @@ class Juego:
                 return
 
             if self.tablero.obtener_posicion(fila, col) == '⛔':
-                return
-
-            if self.tablero.obtener_posicion(fila, col) == '🌲':
-                print()
-                print("\nquí está el punto por done tiene que pasar\n")
                 return
             
             if self.tablero.obtener_posicion(fila, col) == '🤖' or self.tablero.obtener_posicion(fila, col) == '❌':
@@ -202,7 +174,7 @@ class Juego:
             print("La celda está bloqueada")
             fila, col = pos
 
-        if valor == '🌲':
+        if valor == '🟫':
             print("\nAquí está el punto por donde tiene que pasar\n")
             fila, col = pos
 
@@ -217,13 +189,6 @@ class Juego:
         
 
         return fila, col
-    
-    def punto_por_donde_pasa(self,fila,col):
-        if self.tablero.verificar_posicion(fila,col):
-            self.tablero.cambiar_casilla(fila,col,'🌲')
-        else:
-            print("Tiene que poner el punto dentro de los limites del tablero")
-                
 
 def menu_crear_tablero():
     while True:
@@ -242,13 +207,13 @@ def menu_inicio(tablero, juego):
         print("\n Iniciando el juego \n")
         if opcion == "1":
 
-            fila = int(input("Digite la fila por donde quiere que pase el punto: "))
-            col = int(input("Digite la columna por donde quiere que pase el punto: "))
             tablero.celdas()
+            tablero.punto_medio()
+            print(tablero.punto_medio())
             juego.iniciar_x()
             juego.iniciar_y()
+            
 
-            juego.punto_por_donde_pasa(fila,col)
             menu_turnos(tablero, juego)
             break
 
@@ -281,7 +246,7 @@ def menu_turnos(tablero, juego):
         
         print("\nTurno de la maquina\n")
 
-        opcion_y  = "1"
+        opcion_y  = str(randint(1, 2))
         if opcion_y  == "1":
             juego.movimiento_y()
         if opcion_y  == "2":

@@ -41,20 +41,6 @@ class Tablero:
             fila = fila.next
 
 
-    def punto_por_donde_tiene_que_pasar(self, fila, col, punto = '🌲'):
-        nodo_fila = self.tablero.head
-
-        for i in range(fila):
-            nodo_fila = nodo_fila.next
-
-        current = nodo_fila.value.head
-        for i in range(col):
-            current = current.next
-
-        current.value = punto
-
-
-
     def posicion_inicial_x(self):
         fila = self.tamano - 1
         col = (self.tamano // 2)
@@ -100,62 +86,30 @@ class Tablero:
 
         current.value = valor
 
-    def verificar_camino(self, i_pos, fila_ganar, fila_bloqueo, col_bloqueo, paso_por_valor = None):
 
-        fila, col = i_pos
-        casilla_original = self.obtener_posicion(fila_bloqueo, col_bloqueo)
-        self.cambiar_casilla(fila_bloqueo, col_bloqueo, "⛔")
+    def punto_medio(self):
+        fila_punto_medio = self.tamano//2
+        col_punto_medio = self.tamano//2
 
-        if fila == fila_ganar and paso_por_valor:
-            return True
-        
-        valor_actual = self.obtener_posicion(fila, col)
-        if valor_actual == "🌲":
-            paso_por_valor = True
+        return fila_punto_medio , col_punto_medio
 
-        self.cambiar_casilla(fila, col, "0")
-
-        direcciones = LinkedList()
-        direcciones.add_head((-1,0))
-        direcciones.add_head((0,-1))
-        direcciones.add_head((1,0))
-        direcciones.add_head((0,1))
-
-        current = direcciones.head
-
-        while current:
-
-            temp_mov_f, temp_mov_c = current.value
-            nueva_fila, nueva_col = fila + temp_mov_f, col + temp_mov_c
-
-            if self.verificar_posicion(nueva_fila, nueva_col):
-                if self.obtener_posicion(nueva_fila, nueva_col) != "0":
-                    if self.obtener_posicion(nueva_fila, nueva_col) != "⛔":
-                        if self.verificar_camino((nueva_fila, nueva_col), fila_ganar, fila_bloqueo, col_bloqueo, paso_por_valor):
-                            self.cambiar_casilla(fila, col, valor_actual)
-                            self.cambiar_casilla(fila_bloqueo, col_bloqueo, casilla_original)
-                            return True
-                        
-            current = current.next
-                            
-        self.cambiar_casilla(fila, col, valor_actual)
-        self.cambiar_casilla(fila_bloqueo, col_bloqueo, casilla_original)
-
-        return False
     
 
-    def verificar_camino_por_el_punto(self, i_pos, fila_ganar, fila_bloqueo, col_bloqueo, paso_por_valor = None):
+    def verificar_camino_por_el_punto(self, i_pos, fila_ganar, fila_bloqueo, col_bloqueo, paso_por_el_centro = None):
 
         fila, col = i_pos
         casilla_original = self.obtener_posicion(fila_bloqueo, col_bloqueo)
         self.cambiar_casilla(fila_bloqueo, col_bloqueo, "⛔")
 
-        if fila == fila_ganar and paso_por_valor:
+        if fila == fila_ganar and paso_por_el_centro:
             return True
         
+
         valor_actual = self.obtener_posicion(fila, col)
-        if valor_actual == "🌲":
-            paso_por_valor = True
+        punto = self.punto_medio()
+        if i_pos == punto:
+            paso_por_el_centro = True
+        
 
         self.cambiar_casilla(fila, col, "0")
 
@@ -175,7 +129,7 @@ class Tablero:
             if self.verificar_posicion(nueva_fila, nueva_col):
                 if self.obtener_posicion(nueva_fila, nueva_col) != "0":
                     if self.obtener_posicion(nueva_fila, nueva_col) != "⛔":
-                        if self.verificar_camino_por_el_punto((nueva_fila, nueva_col), fila_ganar, fila_bloqueo, col_bloqueo, paso_por_valor):
+                        if self.verificar_camino_por_el_punto((nueva_fila, nueva_col), fila_ganar, fila_bloqueo, col_bloqueo, paso_por_el_centro):
                             self.cambiar_casilla(fila, col, valor_actual)
                             self.cambiar_casilla(fila_bloqueo, col_bloqueo, casilla_original)
                             return True
